@@ -1,5 +1,5 @@
 # coding: utf-8
-
+from __future__ import absolute_import, division, print_function
 import numpy as np
 import os
 import config as cfg
@@ -38,12 +38,12 @@ class Data(object):
         self.__annotations = annotations[: int(split_ratio * num_annotations)]
         self.__num_samples = len(self.__annotations)
         logging.info(('The number of image for %s is:' % dataset_type).ljust(50) + str(self.__num_samples))
-        self.__num_batchs = np.ceil(self.__num_samples / self.__batch_size)
+        self.__num_batchs = self.__num_samples // self.__batch_size
         self.__batch_count = 0
 
     def batch_size_change(self, batch_size_new):
         self.__batch_size = batch_size_new
-        self.__num_batchs = np.ceil(self.__num_samples / self.__batch_size)
+        self.__num_batchs = self.__num_samples // self.__batch_size
         logging.info('Use the new batch size: %d' % self.__batch_size)
 
 
@@ -56,16 +56,15 @@ class Data(object):
         if dataset_type not in ['train', 'test']:
             raise ImportError("You must choice one of the 'train' or 'test' for dataset_type parameter")
         annotation_path = os.path.join(self.__annot_dir_path, dataset_type + '_annotation.txt')
-        with file(annotation_path, 'r') as f:
-            txt = f.readlines()
-            annotations = [line.strip() for line in txt if len(line.strip().split()[1:]) != 0]
+        with open(annotation_path, 'r') as f:
+            annotations = [line.strip() for line in f if len(line.strip().split()[1:]) != 0]
         np.random.shuffle(annotations)
         return annotations
 
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         """
         使得pascal_voc对象变为可迭代对象
         :return: 每次迭代返回一个batch的图片、标签
@@ -80,9 +79,10 @@ class Data(object):
         with tf.device('/cpu:0'):
             if (self.__batch_count % 10) == 0:
                 self.__train_input_size = random.choice(self.__train_input_sizes)
-                self.__train_output_sizes = self.__train_input_size / self.__strides
+                self.__train_output_sizes = self.__train_input_size // self.__strides
 
             batch_image = np.zeros((self.__batch_size, self.__train_input_size, self.__train_input_size, 3))
+
             batch_label_sbbox = np.zeros((self.__batch_size, self.__train_output_sizes[0], self.__train_output_sizes[0],
                                           self.__anchor_per_scale, 5 + self.__num_classes))
             batch_label_mbbox = np.zeros((self.__batch_size, self.__train_output_sizes[1], self.__train_output_sizes[1],
@@ -131,7 +131,7 @@ class Data(object):
         line = annotation.split()
         image_path = line[0]
         image = np.array(cv2.imread(image_path))
-        bboxes = np.array([map(int, box.split(',')) for box in line[1:]])
+        bboxes = np.array([list(map(int, box.split(','))) for box in line[1:]])
 
         image, bboxes = data_aug.random_horizontal_flip(np.copy(image), np.copy(bboxes))
         image, bboxes = data_aug.random_crop(np.copy(image), np.copy(bboxes))
@@ -245,23 +245,24 @@ class Data(object):
 
 if __name__ == '__main__':
     data_obj = Data('train')
+    print (len(data_obj))
     for batch_image, batch_label_sbbox, batch_label_mbbox, batch_label_lbbox, \
                        batch_sbboxes, batch_mbboxes, batch_lbboxes in data_obj:
-        print batch_image.shape
-        print batch_label_sbbox.shape
-        print batch_label_mbbox.shape
-        print batch_label_lbbox.shape
-        print batch_sbboxes.shape
-        print batch_mbboxes.shape
-        print batch_lbboxes.shape
+        print (batch_image.shape)
+        print (batch_label_sbbox.shape)
+        print (batch_label_mbbox.shape)
+        print (batch_label_lbbox.shape)
+        print (batch_sbboxes.shape)
+        print (batch_mbboxes.shape)
+        print (batch_lbboxes.shape)
 
     data_obj = Data('test')
     for batch_image, batch_label_sbbox, batch_label_mbbox, batch_label_lbbox, \
                        batch_sbboxes, batch_mbboxes, batch_lbboxes in data_obj:
-        print batch_image.shape
-        print batch_label_sbbox.shape
-        print batch_label_mbbox.shape
-        print batch_label_lbbox.shape
-        print batch_sbboxes.shape
-        print batch_mbboxes.shape
-        print batch_lbboxes.shape
+        print (batch_image.shape)
+        print (batch_label_sbbox.shape)
+        print (batch_label_mbbox.shape)
+        print (batch_label_lbbox.shape)
+        print (batch_sbboxes.shape)
+        print (batch_mbboxes.shape)
+        print (batch_lbboxes.shape)

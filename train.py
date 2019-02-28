@@ -127,7 +127,7 @@ class YoloTrain(object):
                 self.__train_op = self.__train_op_with_all_variables
                 logging.info('Train all of weights')
 
-            print_loss_iter = len(self.__train_data) / 10
+            print_loss_iter = len(self.__train_data) // 10
             total_train_loss = 0.0
 
             for step, (batch_image, batch_label_sbbox, batch_label_mbbox, batch_label_lbbox,
@@ -146,7 +146,7 @@ class YoloTrain(object):
                         self.__training: False
                     }
                 )
-                print "running"
+                print ("running")
                 if np.isnan(loss_value):
                     raise ArithmeticError('The gradient is exploded')
                 total_train_loss += loss_value
@@ -177,7 +177,7 @@ class YoloTrain(object):
                         self.__training: False
                 }
                 )
-                print "running"
+                print ("running")
                 total_test_loss += loss_value
             test_loss = total_test_loss / len(self.__test_data)
             logging.info('Period:\t%d\ttest loss:\t%.4f' % (period, test_loss))

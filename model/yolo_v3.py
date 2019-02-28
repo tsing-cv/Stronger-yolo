@@ -1,7 +1,8 @@
 # coding:utf-8
-
+# import sys
+# sys.path.append('../')
 import tensorflow as tf
-import custom_layers as cs_layer
+import model.custom_layers as cs_layer
 import config as cfg
 import numpy as np
 from utils import utils

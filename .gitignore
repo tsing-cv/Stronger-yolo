@@ -13,3 +13,4 @@ yolov3_to_tf/yolov3.weights
 *.pyc
 .gitignore
 modify_note
+data/VOC

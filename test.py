@@ -167,7 +167,7 @@ class YoloTest(object):
         os.mkdir(ground_truth_dir_path)
 
         annotation_path = os.path.join(self.__annot_dir_path, 'test_annotation.txt')
-        with file(annotation_path, 'r') as annotation_file:
+        with open(annotation_path, 'r') as annotation_file:
             for num, line in enumerate(annotation_file):
                 annotation = line.strip().split()
                 image_path = annotation[0]
@@ -177,19 +177,19 @@ class YoloTest(object):
                 bboxes_gt, classes_gt = bbox_data_gt[:, :4], bbox_data_gt[:, 4]
                 ground_truth_path = os.path.join(ground_truth_dir_path, str(num) + '.txt')
 
-                print 'ground truth of %s:' % image_name
+                print ('ground truth of %s:' % image_name)
                 num_bbox_gt = len(bboxes_gt)
-                with file(ground_truth_path, 'w') as f:
+                with open(ground_truth_path, 'w') as f:
                     for i in range(num_bbox_gt):
                         class_name = self.__classes[classes_gt[i]]
                         xmin, ymin, xmax, ymax = map(str, bboxes_gt[i])
                         bbox_mess = ' '.join([class_name, xmin, ymin, xmax, ymax]) + '\n'
                         f.write(bbox_mess)
-                        print '\t' + str(bbox_mess).strip()
-                print 'predict result of %s:' % image_name
+                        print ('\t' + str(bbox_mess).strip())
+                print ('predict result of %s:' % image_name)
                 predict_result_path = os.path.join(predicted_dir_path, str(num) + '.txt')
                 bboxes_pr = self.__get_bbox(image)
-                with file(predict_result_path, 'w') as f:
+                with open(predict_result_path, 'w') as f:
                     for bbox in bboxes_pr:
                         coor = np.array(bbox[:4], dtype=np.int32)
                         score = bbox[4]
@@ -199,13 +199,13 @@ class YoloTest(object):
                         xmin, ymin, xmax, ymax = map(str, coor)
                         bbox_mess = ' '.join([class_name, score, xmin, ymin, xmax, ymax]) + '\n'
                         f.write(bbox_mess)
-                        print '\t' + str(bbox_mess).strip()
-                print
+                        print ('\t' + str(bbox_mess).strip())
+
 
     def voc_2012_test(self):
         test_2012_path = os.path.join(self.__dataset_path, '2012_test')
         img_inds_file = os.path.join(test_2012_path, 'ImageSets', 'Main', 'test.txt')
-        with file(img_inds_file, 'r') as f:
+        with open(img_inds_file, 'r') as f:
             txt = f.readlines()
             image_inds = [line.strip() for line in txt]
 
@@ -218,7 +218,7 @@ class YoloTest(object):
             image_path = os.path.join(test_2012_path, 'JPEGImages', image_ind + '.jpg')
             image = cv2.imread(image_path)
 
-            print 'predict result of %s:' % image_ind
+            print ('predict result of %s:' % image_ind)
             bboxes_pr = self.__get_bbox(image)
             for bbox in bboxes_pr:
                 coor = np.array(bbox[:4], dtype=np.int32)
@@ -228,11 +228,10 @@ class YoloTest(object):
                 score = '%.4f' % score
                 xmin, ymin, xmax, ymax = map(str, coor)
                 bbox_mess = ' '.join([image_ind, score, xmin, ymin, xmax, ymax]) + '\n'
-                with file(os.path.join(results_path, 'comp4_det_test_' + class_name + '.txt'), 'a') as f:
+                with open(os.path.join(results_path, 'comp4_det_test_' + class_name + '.txt'), 'a') as f:
                     f.write(bbox_mess)
-                print '\t' + str(bbox_mess).strip()
-            print
-        pass
+                print ('\t' + str(bbox_mess).strip())
+
 
     def __draw_bbox(self, original_image, bboxes):
         """

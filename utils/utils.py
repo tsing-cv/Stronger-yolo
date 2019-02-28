@@ -1,5 +1,5 @@
 # coding: utf-8
-
+from __future__ import absolute_import, division, print_function
 import numpy as np
 import tensorflow as tf
 import cv2
@@ -133,11 +133,11 @@ def iou_calc4(boxes1, boxes2):
 def nms(bboxes, score_threshold, iou_threshold, sigma=0.3, method='nms'):
     """
     :param bboxes:
-    假设有N个bbox的score大于score_threshold，那么bboxes的shape为(N, 6)，存储格式为(xmin, ymin, xmax, ymax, score, class)
-    其中(xmin, ymin, xmax, ymax)的大小都是相对于输入原图的，score = conf * prob，class是bbox所属类别的索引号
+        假设有N个bbox的score大于score_threshold，那么bboxes的shape为(N, 6)，存储格式为(xmin, ymin, xmax, ymax, score, class)
+        其中(xmin, ymin, xmax, ymax)的大小都是相对于输入原图的，score = conf * prob，class是bbox所属类别的索引号
     :return: best_bboxes
-    假设NMS后剩下N个bbox，那么best_bboxes的shape为(N, 6)，存储格式为(xmin, ymin, xmax, ymax, score, class)
-    其中(xmin, ymin, xmax, ymax)的大小都是相对于输入原图的，score = conf * prob，class是bbox所属类别的索引号
+        假设NMS后剩下N个bbox，那么best_bboxes的shape为(N, 6)，存储格式为(xmin, ymin, xmax, ymax, score, class)
+        其中(xmin, ymin, xmax, ymax)的大小都是相对于输入原图的，score = conf * prob，class是bbox所属类别的索引号
     """
     classes_in_img = list(set(bboxes[:, 5]))
     best_bboxes = []

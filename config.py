@@ -33,7 +33,7 @@ IOU_THRESHOLD = 0.45     # The threshold of the IOU when implement NMS
 GPU = '1'
 
 # name and path
-DATASET_PATH = '/home/wz/doc/code/python_code/data/VOC'
+DATASET_PATH = './data/VOC'
 ANNOT_DIR_PATH = 'data'
 WEIGHTS_DIR = 'weights'
 WEIGHTS_FILE = 'voc_fine_tune_initial.ckpt'
